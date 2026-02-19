@@ -31,9 +31,12 @@ app.get("/", (req, res) => {
  * =========================
  * Replace VERIFY_CODE with the exact content TikTok gives you
  */
-app.get("/tiktok_verify.txt", (req, res) => {
-  res.type("text/plain");
-  res.send("tiktok-developers-site-verification=NgyEBGMvmewJRprjtvkMUFF0c6WKrKNp");
+// TikTok verify (handle both with and without trailing slash)
+app.get(["/tiktok_verify.txt", "/tiktok_verify.txt/"], (req, res) => {
+  res.setHeader("Content-Type", "text/plain");
+  res.status(200).send(
+    "tiktok-developers-site-verification=O56HDcGn59vIYWsl8e5X6xlVWcU7AdLY"
+  );
 });
 
 /**
