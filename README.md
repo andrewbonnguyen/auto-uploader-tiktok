@@ -25,8 +25,8 @@ AutoUploader TikTok is a simple web-based utility tool that allows users to manu
 
 Create a .env file:
 
-CLIENT_KEY=your_client_key
-CLIENT_SECRET=your_client_secret
+CLIENT_KEY=my_client_key
+CLIENT_SECRET=my_client_secret
 REDIRECT_URI=http://localhost:3000/callback
 
 ## Install
