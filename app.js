@@ -33,7 +33,7 @@ app.get("/", (req, res) => {
  */
 app.get("/tiktok_verify.txt", (req, res) => {
   res.type("text/plain");
-  res.send("PASTE_YOUR_TIKTOK_VERIFICATION_CODE_HERE");
+  res.send("tiktok-developers-site-verification=QXzSkL9CZjwqpk0NxbG0aGumOqLmsKe7");
 });
 
 /**
