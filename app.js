@@ -4,34 +4,22 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Parse JSON & form data
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Disable cache for verification files
+app.use((req, res, next) => {
+  if (req.url.endsWith(".txt")) {
+    res.setHeader("Cache-Control", "no-store");
+  }
+  next();
+});
 
-// 🔥 Serve static files from /public folder
+// Serve static files
 app.use(express.static(path.join(__dirname, "public")));
 
 // Root route
 app.get("/", (req, res) => {
-  res.status(200).send("Auto Uploader TikTok App Running");
+  res.send("Auto Uploader TikTok Running");
 });
 
-// Optional: OAuth callback route
-app.get("/callback", (req, res) => {
-  const { code, state } = req.query;
-
-  if (!code) {
-    return res.status(400).send("Missing authorization code");
-  }
-
-  res.status(200).json({
-    message: "Callback received successfully",
-    code,
-    state: state || null
-  });
-});
-
-// Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
