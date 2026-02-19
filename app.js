@@ -11,17 +11,63 @@ const REDIRECT_URI = process.env.REDIRECT_URI;
 const PORT = process.env.PORT || 3000;
 
 /**
- * Health Check
+ * =========================
+ * BASIC LANDING PAGE
+ * =========================
  */
 app.get("/", (req, res) => {
-  res.json({
-    app: "AutoUploader TikTok",
-    status: "running"
-  });
+  res.send(`
+    <h1>AutoUploader TikTok</h1>
+    <p>Status: Running</p>
+    <p><a href="/auth">Login with TikTok</a></p>
+    <p><a href="/terms">Terms of Service</a></p>
+    <p><a href="/privacy">Privacy Policy</a></p>
+  `);
 });
 
 /**
- * STEP 1 – Redirect to TikTok OAuth
+ * =========================
+ * TIKTOK VERIFY ROUTE
+ * =========================
+ * Replace VERIFY_CODE with the exact content TikTok gives you
+ */
+app.get("/tiktok_verify.txt", (req, res) => {
+  res.type("text/plain");
+  res.send("PASTE_YOUR_TIKTOK_VERIFICATION_CODE_HERE");
+});
+
+/**
+ * =========================
+ * TERMS ROUTE
+ * =========================
+ */
+app.get("/terms", (req, res) => {
+  res.send(`
+    <h2>Terms of Service</h2>
+    <p>This application allows users to upload videos to their own TikTok accounts using the official TikTok Open API.</p>
+    <p>Users are responsible for the content they upload.</p>
+  `);
+});
+
+/**
+ * =========================
+ * PRIVACY ROUTE
+ * =========================
+ */
+app.get("/privacy", (req, res) => {
+  res.send(`
+    <h2>Privacy Policy</h2>
+    <p>This app uses TikTok OAuth to authenticate users.</p>
+    <p>No passwords are stored.</p>
+    <p>No permanent token storage.</p>
+    <p>No third-party data sharing.</p>
+  `);
+});
+
+/**
+ * =========================
+ * STEP 1 – OAuth Login
+ * =========================
  */
 app.get("/auth", (req, res) => {
   const authUrl = `https://www.tiktok.com/v2/auth/authorize?client_key=${CLIENT_KEY}&response_type=code&scope=user.info.basic,video.upload&redirect_uri=${REDIRECT_URI}`;
@@ -29,7 +75,9 @@ app.get("/auth", (req, res) => {
 });
 
 /**
+ * =========================
  * STEP 2 – OAuth Callback
+ * =========================
  */
 app.get("/callback", async (req, res) => {
   const code = req.query.code;
@@ -47,9 +95,6 @@ app.get("/callback", async (req, res) => {
         code: code,
         grant_type: "authorization_code",
         redirect_uri: REDIRECT_URI,
-      },
-      {
-        headers: { "Content-Type": "application/json" }
       }
     );
 
@@ -67,7 +112,9 @@ app.get("/callback", async (req, res) => {
 });
 
 /**
+ * =========================
  * STEP 3 – Manual Upload
+ * =========================
  */
 app.post("/upload", async (req, res) => {
   const { access_token, video_url, caption } = req.body;
