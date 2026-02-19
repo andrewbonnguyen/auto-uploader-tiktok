@@ -1,23 +1,22 @@
 const express = require("express");
 const path = require("path");
-require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// Parse JSON & form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files (VERY IMPORTANT for TikTok verification)
+// 🔥 Serve static files from /public folder
 app.use(express.static(path.join(__dirname, "public")));
 
-// Health check route
+// Root route
 app.get("/", (req, res) => {
   res.status(200).send("Auto Uploader TikTok App Running");
 });
 
-// TikTok OAuth callback placeholder
+// Optional: OAuth callback route
 app.get("/callback", (req, res) => {
   const { code, state } = req.query;
 
@@ -25,15 +24,14 @@ app.get("/callback", (req, res) => {
     return res.status(400).send("Missing authorization code");
   }
 
-  // In real production you would exchange code for access_token here
   res.status(200).json({
-    message: "OAuth callback received successfully",
-    code: code,
+    message: "Callback received successfully",
+    code,
     state: state || null
   });
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
